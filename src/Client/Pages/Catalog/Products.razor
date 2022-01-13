@@ -1,0 +1,51 @@
+﻿@page "/catalog/products"
+@attribute [Authorize(Policy = FSHPermissions.Products.View)]
+
+@inject IStringLocalizer<Products> L
+
+<FshTitle Title="@L["Products"]" Description="@L["Manage Products."]" />
+
+<EntityTable TEntity="ProductDto" TId="Guid" TRequest="UpdateProductRequest" Context="@Context">
+
+    <AdvancedSearchContent>
+        <div style="margin-top:10px!important">
+            <MudCheckBox @bind-Checked="@CheckBox" Label="All Columns"></MudCheckBox>
+            <MudCheckBox @bind-Checked="@CheckBox" Label="Column1"></MudCheckBox>
+            <MudCheckBox @bind-Checked="@CheckBox" Label="Column2"></MudCheckBox>
+        </div>
+    </AdvancedSearchContent>
+
+    <EditFormContent>
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudAutocomplete Label="@L["Brand"]" For="@(() => context.BrandId)"
+                @bind-Value="context.BrandId" ResetValueOnEmptyText="true"
+                SearchFunc="@SearchBrands" Variant="Variant.Filled"
+                ToStringFunc="@(i => _brands.FirstOrDefault(b => b.Id == i)?.Name ?? string.Empty)"
+                Dense="true" Margin="Margin.Dense" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Rate"]" For="@(() => context.Rate)" @bind-Value="context.Rate" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudItem>
+                <MudAvatar Square="true" Style="height: auto; width: auto; max-height: 100%"> </MudAvatar>
+            </MudItem>
+            <MudItem>
+                @* <InputFile id="fileInput" hidden OnChange="UploadFiles" /> *@
+                <div>
+                    <MudButton HtmlTag="label" Variant="Variant.Text" Color="Color.Primary" Size="Size.Small"
+                        StartIcon="@Icons.Filled.CloudUpload" for="fileInput">
+                        @L["Upload"]
+                    </MudButton>
+                </div>
+            </MudItem>
+        </MudItem>
+    </EditFormContent>
+
+</EntityTable>
